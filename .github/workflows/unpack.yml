@@ -1,28 +1,17 @@
 name: Unpack Final Zip
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # <-- this line enables the Run button
   push:
-    paths:
-      - 'krenari_eagle_final.zip'
+    branches: [ main ]
 
 jobs:
-  unzip:
+  unpack:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
       - name: Unzip site
         run: |
-          sudo apt-get update && sudo apt-get install -y unzip
-          unzip -o krenari_eagle_final.zip -d extracted
-          shopt -s dotglob
-          mv -f extracted/* .
-          rm -rf extracted
-          rm -f krenari_eagle_final.zip
-
-      - name: Commit unzipped files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Unpack site zip"
-          add_options: '-A'
+          unzip -o krenari_eagle_final.zip -d .
