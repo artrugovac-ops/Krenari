@@ -1,6 +1,7 @@
 name: Unpack Final Zip
 
 on:
+  workflow_dispatch:   # manual trigger
   push:
     paths:
       - "krenari_eagle_final.zip"
@@ -12,11 +13,21 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: List files before
+        run: ls -R .
+
       - name: Unzip file
         run: |
           unzip -o krenari_eagle_final.zip -d site
+          echo "----- Contents of site/ after unzip -----"
+          ls -R site
+
+      - name: Move files to root
+        run: |
           rsync -av site/ ./
           rm -rf site
+          echo "----- Files in repo root after move -----"
+          ls -R .
 
       - name: Commit unpacked files
         run: |
